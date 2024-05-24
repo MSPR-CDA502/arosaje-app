@@ -40,7 +40,11 @@ const Accueil: React.FC = () => {
         router.replace('./accueil');
     };
 
-    const handleButtonPress = (buttonNumber) => {
+    const handleGardePress = () => {
+        router.push('./garde'); // Navigate to the Garde page
+      };
+
+    const handleButtonPress = (buttonNumber: number) => {
         console.log(`Button ${buttonNumber} pressed`);
     };
 
@@ -67,7 +71,7 @@ const Accueil: React.FC = () => {
                         {[1, 2, 3].map(num => (
                             <View style={styles.blurContainer} key={num}>
                                 <Image source={Plante_garde} style={styles.image_plante_garde} />
-                                <Button title={`Garde ${num}`} onPress={handleSubmit} buttonStyle={styles.gardebutton} textStyle={styles.customButtonTextGarde} />
+                                <Button title={`Garde ${num}`} onPress={handleGardePress} buttonStyle={styles.gardebutton} textStyle={styles.customButtonTextGarde} />
                             </View>
                         ))}
                     </PagerView>

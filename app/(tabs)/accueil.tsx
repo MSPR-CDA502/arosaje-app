@@ -1,21 +1,38 @@
-// src/components/Accueil.tsx
-
 import { router } from 'expo-router';
-import React, { useRef, useState } from 'react';
-import { StyleSheet, View, Text, ImageBackground, Image, ScrollView, Dimensions, TouchableOpacity, PanResponder } from 'react-native';
-
-import Animated, {
-    interpolate,
-    useAnimatedStyle,
-} from "react-native-reanimated";
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, View, Text, ImageBackground, Image, ScrollView } from 'react-native';
+import PagerView from 'react-native-pager-view';
+import { BlurView } from 'expo-blur';
 import Button from '../../components/Bouton';
+
 const FontImage = require('../../assets/images/background.jpeg');
 const Plante_un = require('../../assets/images/plante_un.png');
-
-
+const Plante_garde = require('../../assets/images/plante_garde.png');
+const Videos_un = require('../../assets/images/videos_un.jpg');
+const Videos_deux = require('../../assets/images/videos_deux.jpg');
+const Videos_trois = require('../../assets/images/videos_trois.jpg');
 
 const Accueil: React.FC = () => {
+    const [currentPage, setCurrentPage] = useState(0);
+    const [currentVideoPage, setCurrentVideoPage] = useState(0);
+    const pagerRef = useRef<PagerView>(null);
+    const videoPagerRef = useRef<PagerView>(null);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentPage(prevPage => (prevPage + 1) % 3);
+        }, 3000); // Change page every 3 seconds
+
+        return () => clearInterval(interval); // Clean up on unmount
+    }, []);
+
+    useEffect(() => {
+        const videoInterval = setInterval(() => {
+            setCurrentVideoPage(prevPage => (prevPage + 1) % 3);
+        }, 3000); // Change page every 3 seconds
+
+        return () => clearInterval(videoInterval); // Clean up on unmount
+    }, []);
 
     const handleSubmit = () => {
         // Ajouter la logique de soumission ici
@@ -24,39 +41,63 @@ const Accueil: React.FC = () => {
     };
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-            <View style={styles.container}>
+        <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <View style={styles.imageContainer}>
-                    <ImageBackground source={FontImage} style={styles.backgroundImage}>
-                        <View style={styles.idees}>
-                            <Text style={styles.text_idees}>Idées et Astuces</Text>
-                            <Text style={styles.text_explore}>EXPLORE</Text>
-                        </View>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.text}>Photos Plantes</Text>
-                        </View>
-                    </ImageBackground>
+                    <BlurView intensity={50} style={styles.blurBackground}>
+                        <ImageBackground source={FontImage} style={styles.backgroundImage}>
+                            <View style={styles.idees}>
+                                <Text style={styles.text_idees}>Idées et Astuces</Text>
+                                <Text style={styles.text_explore}>EXPLORE</Text>
+                            </View>
+                            <View style={styles.textContainer}>
+                                <Text style={styles.text}>Photos Plantes</Text>
+                            </View>
+                        </ImageBackground>
+                    </BlurView>
                 </View>
-                <Image source={Plante_un} style={styles.image_plante} />
-                <View style={styles.buttonContainer}>
-                    <Button title="En Savoir Plus" onPress={handleSubmit} buttonStyle={styles.customButton} textStyle={styles.customButtonText} />
+                    <Image source={Plante_un} style={styles.image_plante} />
+                    <View style={styles.buttonContainer}>
+                        <Button title="En Savoir Plus" onPress={handleSubmit} buttonStyle={styles.customButton} textStyle={styles.customButtonText} />
+                    </View>
+                    <Image source={Plante_un} style={styles.image_plante_bis} />
+                <View style={styles.carouselun}>
+                    <Text style={styles.title_section}>Mes Gardes Récentes</Text>
+                    <PagerView ref={pagerRef} style={styles.containercarousel} initialPage={0}>
+                        {[1, 2, 3].map(num => (
+                            <View style={styles.blurContainer} key={num}>
+                                <Image source={Plante_garde} style={styles.image_plante_garde} />
+                                <Button title={`Garde ${num}`} onPress={handleSubmit} buttonStyle={styles.gardebutton} textStyle={styles.customButtonTextGarde} />
+                            </View>
+                        ))}
+                    </PagerView>
                 </View>
-                <Image source={Plante_un} style={styles.image_plante_bis} />
-                <Text style={styles.title_section}>Mes Gardes Récentes</Text>
-                <View style={styles.carouselContainer}>
+                <View style={styles.video_container}>
+                    <Text style={styles.title_videos}>Vidéos</Text>
+                    <PagerView ref={videoPagerRef} style={styles.containercarouselvideo} initialPage={0}>
+                        {[1, 2, 3].map(num => (
+                            <View style={styles.blurContainer} key={num}>
+                                <Image source={Videos_un} style={styles.image_plante_garde} />
+                                <Button title={`Vidéo ${num}`} onPress={handleSubmit} buttonStyle={styles.gardebutton} textStyle={styles.customButtonTextGarde} />
+                            </View>
+                        ))}
+                    </PagerView>
                 </View>
+            </ScrollView>
+            <View style={styles.nav}>
+                <Text>Test</Text>
             </View>
-        </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white', // Change background color to white
+    },
     scrollContainer: {
         flexGrow: 1,
-    },
-    container: {
-        backgroundColor: '#E6F1F0',
-        height: '100%',
     },
     imageContainer: {
         width: '130%',
@@ -64,7 +105,10 @@ const styles = StyleSheet.create({
         marginLeft: '-15%',
         borderBottomLeftRadius: 300,
         borderBottomRightRadius: 300,
-        overflow: 'hidden', // Important pour arrondir les bords de l'image
+        overflow: 'hidden',
+    },
+    blurBackground: {
+        flex: 1,
     },
     backgroundImage: {
         flex: 1,
@@ -72,8 +116,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     idees: {
-        flex: 1,
-        flexDirection: 'column',
         position: 'absolute',
         alignContent: 'center',
         justifyContent: 'center',
@@ -146,36 +188,81 @@ const styles = StyleSheet.create({
         fontSize: 24,
         fontWeight: 'bold',
     },
+    carouselun: {
+        zIndex: -1,
+        top: -50,
+        height: '50%',
+        backgroundColor: '#E6F1F0',
+    },
     title_section: {
-        position: 'absolute',
-        top: 300,
+        marginTop: 80,
         width: '100%',
         color: '#47635C',
         fontSize: 24,
         fontFamily: 'KaushanScript',
-    },
-    // Carousel //
-    carouselContainer: {
-        marginTop: 150,
         alignItems: 'center',
+        backgroundColor: '#E6F1F0',
     },
-    carousel: {
-        flexDirection: 'row',
+    containercarousel: {
+        marginTop: 20,
+        height: 300,
+        backgroundColor: '#E6F1F0',
     },
-    carouselImage: {
-        width: 300,
-        height: 200,
-        marginRight: 10,
+    blurContainer: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+        overflow: 'hidden',
+        borderRadius: 20,
     },
-    carouselButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '60%',
+    blurView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 20,
+        overflow: 'hidden',
+        zIndex: 1,
     },
-    carouselButtonText: {
-        fontSize: 18,
-        color: '#333',
+    image_plante_garde: {
+        width: 240,
+        height: 240,
+        borderRadius: 20,
     },
+    gardebutton: {
+        width: 240,
+        height: 240,
+        marginTop: -240,
+    },
+    customButtonTextGarde: {
+        color: '#47635C',
+        fontSize: 24,
+        position: 'absolute',
+        top: 200,
+        left: 10,
+    },
+    // Videos Part //
+    video_container: {
+        backgroundColor: 'white',
+        marginTop: 0,
+    },
+    title_videos: {
+        color: '#47635C',
+        fontSize: 24,
+        fontFamily: 'KaushanScript',
+        marginTop: -40,
+    },
+    containercarouselvideo: {
+        marginTop: 0,
+        height: 300,
+    },
+    // Part NavBar //
+    nav: {
+        marginBottom: 0,
+        backgroundColor: 'white', // Background color for the navbar
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: 60,
+    }
 });
 
 export default Accueil;
+

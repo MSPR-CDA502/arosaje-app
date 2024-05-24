@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, View, Text, ImageBackground, Image, ScrollView } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, Image, ScrollView, TouchableOpacity } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import { BlurView } from 'expo-blur';
 import Button from '../../components/Bouton';
@@ -40,27 +40,27 @@ const Accueil: React.FC = () => {
         router.replace('./accueil');
     };
 
+    const handleButtonPress = (buttonNumber) => {
+        console.log(`Button ${buttonNumber} pressed`);
+    };
+
     return (
         <View style={styles.container}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <View style={styles.imageContainer}>
                     <BlurView intensity={50} style={styles.blurBackground}>
                         <ImageBackground source={FontImage} style={styles.backgroundImage}>
-                            <View style={styles.idees}>
-                                <Text style={styles.text_idees}>Idées et Astuces</Text>
-                                <Text style={styles.text_explore}>EXPLORE</Text>
-                            </View>
                             <View style={styles.textContainer}>
                                 <Text style={styles.text}>Photos Plantes</Text>
                             </View>
                         </ImageBackground>
                     </BlurView>
                 </View>
-                    <Image source={Plante_un} style={styles.image_plante} />
-                    <View style={styles.buttonContainer}>
-                        <Button title="En Savoir Plus" onPress={handleSubmit} buttonStyle={styles.customButton} textStyle={styles.customButtonText} />
-                    </View>
-                    <Image source={Plante_un} style={styles.image_plante_bis} />
+                <Image source={Plante_un} style={styles.image_plante} />
+                <View style={styles.buttonContainer}>
+                    <Button title="En Savoir Plus" onPress={handleSubmit} buttonStyle={styles.customButton} textStyle={styles.customButtonText} />
+                </View>
+                <Image source={Plante_un} style={styles.image_plante_bis} />
                 <View style={styles.carouselun}>
                     <Text style={styles.title_section}>Mes Gardes Récentes</Text>
                     <PagerView ref={pagerRef} style={styles.containercarousel} initialPage={0}>
@@ -85,8 +85,23 @@ const Accueil: React.FC = () => {
                 </View>
             </ScrollView>
             <View style={styles.nav}>
-                <Text>Test</Text>
+                <TouchableOpacity onPress={() => handleButtonPress(1)} style={styles.navButton}>
+                    <Image source={require('../../assets/images/chat.png')} style={styles.buttonImage} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleButtonPress(2)} style={styles.navButton}>
+                    <Image source={require('../../assets/images/plantes.png')} style={styles.buttonImage} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleButtonPress(3)} style={styles.navButton}>
+                    <Image source={require('../../assets/images/search.png')} style={styles.buttonImage} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleButtonPress(4)} style={styles.navButton}>
+                    <Image source={require('../../assets/images/botanistes.png')} style={styles.buttonImage} />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => handleButtonPress(5)} style={styles.navButton}>
+                    <Image source={require('../../assets/images/gardes.png')} style={styles.buttonImage} />
+                </TouchableOpacity>
             </View>
+
         </View>
     );
 };
@@ -115,24 +130,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    idees: {
-        position: 'absolute',
-        alignContent: 'center',
-        justifyContent: 'center',
-        top: 0,
-        width: 135,
-        left: 50,
-        height: 121,
-        backgroundColor: 'rgba(255, 255, 255, 0.40)',
-        borderBottomRightRadius: 20,
-    },
-    text_idees: {
-        textAlign: 'center',
-        textAlignVertical: 'center',
-        color: 'white',
-        fontFamily: 'KaushanScript',
-        fontSize: 16,
-    },
+
     text_explore: {
         color: 'white',
         fontFamily: 'KaushanScript',
@@ -256,12 +254,23 @@ const styles = StyleSheet.create({
     },
     // Part NavBar //
     nav: {
-        marginBottom: 0,
+        marginBottom: 10,
         backgroundColor: 'white', // Background color for the navbar
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         height: 60,
-    }
+        flexDirection: 'row',
+        borderRadius: 20,
+    },
+    navButton: {
+        width: 40,
+        height: 40,
+    },
+    buttonImage: {
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain',
+    },
 });
 
 export default Accueil;

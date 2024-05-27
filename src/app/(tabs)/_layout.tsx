@@ -24,19 +24,19 @@ export default function Layout() {
       <Slot />
       <View style={styles.nav}>
         <TouchableOpacity onPress={() => handleButtonPress('/chat')} style={styles.navButton}>
-          <Image source={require('../../assets/images/chat.png')} style={styles.buttonImage} />
+          <Image source={require('#/images/chat.png')} style={styles.buttonImage} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleButtonPress('/plantes')} style={styles.navButton}>
-          <Image source={require('../../assets/images/plantes.png')} style={styles.buttonImage} />
+          <Image source={require('#/images/plantes.png')} style={styles.buttonImage} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleButtonPress('/search')} style={styles.navButton}>
-          <Image source={require('../../assets/images/search.png')} style={styles.buttonImage} />
+          <Image source={require('#/images/search.png')} style={styles.buttonImage} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleButtonPress('/botanistes')} style={styles.navButton}>
-          <Image source={require('../../assets/images/botanistes.png')} style={styles.buttonImage} />
+          <Image source={require('#/images/botanistes.png')} style={styles.buttonImage} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleButtonPress('/gardes')} style={styles.navButton}>
-          <Image source={require('../../assets/images/gardes.png')} style={styles.buttonImage} />
+          <Image source={require('#/images/gardes.png')} style={styles.buttonImage} />
         </TouchableOpacity>
       </View>
     </View>

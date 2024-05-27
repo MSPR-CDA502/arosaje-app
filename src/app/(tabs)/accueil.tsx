@@ -5,12 +5,12 @@ import PagerView from 'react-native-pager-view';
 import { BlurView } from 'expo-blur';
 import Button from '../../components/Bouton';
 
-const FontImage = require('../../assets/images/background.jpeg');
-const Plante_un = require('../../assets/images/plante_un.png');
-const Plante_garde = require('../../assets/images/plante_garde.png');
-const Videos_un = require('../../assets/images/videos_un.jpg');
-const Videos_deux = require('../../assets/images/videos_deux.jpg');
-const Videos_trois = require('../../assets/images/videos_trois.jpg');
+const FontImage = require('#/images/background.jpeg');
+const Plante_un = require('#/images/plante_un.png');
+const Plante_garde = require('#/images/plante_garde.png');
+const Videos_un = require('#/images/videos_un.jpg');
+const Videos_deux = require('#/images/videos_deux.jpg');
+const Videos_trois = require('#/images/videos_trois.jpg');
 
 const Accueil: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(0);
@@ -86,19 +86,19 @@ const Accueil: React.FC = () => {
             </ScrollView>
             <View style={styles.nav}>
                 <TouchableOpacity onPress={() => handleButtonPress(1)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/chat.png')} style={styles.buttonImage} />
+                    <Image source={require('#/images/chat.png')} style={styles.buttonImage} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleButtonPress(2)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/plantes.png')} style={styles.buttonImage} />
+                    <Image source={require('#/images/plantes.png')} style={styles.buttonImage} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleButtonPress(3)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/search.png')} style={styles.buttonImage} />
+                    <Image source={require('#/images/search.png')} style={styles.buttonImage} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleButtonPress(4)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/botanistes.png')} style={styles.buttonImage} />
+                    <Image source={require('#/images/botanistes.png')} style={styles.buttonImage} />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => handleButtonPress(5)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/gardes.png')} style={styles.buttonImage} />
+                    <Image source={require('#/images/gardes.png')} style={styles.buttonImage} />
                 </TouchableOpacity>
             </View>
 

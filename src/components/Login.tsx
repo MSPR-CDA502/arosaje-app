@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ImageBackground } from 'react-native';
 
-const backgroundImage = require('../assets/images/background.jpeg');
-const logoImage = require('../assets/images/logo.png');
+const backgroundImage = require('#/images/background.jpeg');
+const logoImage = require('#/images/logo.png');
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 8,
     },
     login: {
-        
+
     }
 });
 

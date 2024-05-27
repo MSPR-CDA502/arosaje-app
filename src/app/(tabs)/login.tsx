@@ -6,8 +6,8 @@ import Card from '../../components/Card';
 import Button from '../../components/Bouton';
 import { router } from 'expo-router';
 
-const backgroundImage = require('../../assets/images/background.jpeg');
-const logoImage = require('../../assets/images/logo.png');
+const backgroundImage = require('#/images/background.jpeg');
+const logoImage = require('#/images/logo.png');
 
 
 const Login: React.FC = () => {
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
   }
 
   return (
-    <ScrollView automaticallyAdjustKeyboardInsets={true} contentContainerStyle={styles.scrollContainer}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
     <ImageBackground source={backgroundImage} style={styles.background}>
       <View style={styles.container_logo}>
         <View style={styles.logo}>

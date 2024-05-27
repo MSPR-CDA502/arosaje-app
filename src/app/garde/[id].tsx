@@ -1,13 +1,20 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { RouteProp } from '@react-navigation/native'; // Import RouteProp from @react-navigation/native
+import { useLocalSearchParams, useRouter } from 'expo-router';
 
 const Garde: React.FC = () => {
+    const { id } = useLocalSearchParams();
+
+console.log(id);
+
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={styles.textHeader}>Garde</Text>
+          <Text style={styles.textHeader}>Garde {id}</Text>
         </View>
         <View style={styles.div}>
           <View style={styles.topline}><Text style={styles.textTopline}>Prochain Entretiens</Text></View>

@@ -1,9 +1,10 @@
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View, Text, ImageBackground, Image, ScrollView, TouchableOpacity } from 'react-native';
 import PagerView from 'react-native-pager-view';
 import { BlurView } from 'expo-blur';
 import Button from '../../components/Bouton';
+
 
 const FontImage = require('#/images/background.jpeg');
 const Plante_un = require('#/images/plante_un.png');
@@ -40,9 +41,12 @@ const Accueil: React.FC = () => {
         router.replace('./accueil');
     };
 
-    const handleGardePress = () => {
-        router.push('./garde'); // Navigate to the Garde page
-      };
+
+    const handleGardePress = (num: number) => {
+        router.replace(`garde/${num}`);
+    };
+    
+    
 
     const handleButtonPress = (buttonNumber: number) => {
         console.log(`Button ${buttonNumber} pressed`);
@@ -71,7 +75,7 @@ const Accueil: React.FC = () => {
                         {[1, 2, 3].map(num => (
                             <View style={styles.blurContainer} key={num}>
                                 <Image source={Plante_garde} style={styles.image_plante_garde} />
-                                <Button title={`Garde ${num}`} onPress={handleGardePress} buttonStyle={styles.gardebutton} textStyle={styles.customButtonTextGarde} />
+                                <Button title={`Garde ${num}`} onPress={() => handleGardePress(num)} buttonStyle={styles.gardebutton} textStyle={styles.customButtonTextGarde} />
                             </View>
                         ))}
                     </PagerView>

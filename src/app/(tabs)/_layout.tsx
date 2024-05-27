@@ -11,6 +11,7 @@ export default function Layout() {
     router.push(route);
   };
 
+
   console.log(usePathname());
   // Si c'est la page de connexion, ne rend pas la barre de navigation inférieure
   if (usePathname() === '/') {
@@ -29,8 +30,8 @@ export default function Layout() {
         <TouchableOpacity onPress={() => handleButtonPress('/plantes')} style={styles.navButton}>
           <Image source={require('#/images/plantes.png')} style={styles.buttonImage} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleButtonPress('/search')} style={styles.navButton}>
-          <Image source={require('#/images/search.png')} style={styles.buttonImage} />
+        <TouchableOpacity onPress={() => handleButtonPress('/accueil')} style={styles.navButton}>
+          <Image source={require('#/images/home.png')} style={styles.buttonImage} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleButtonPress('/botanistes')} style={styles.navButton}>
           <Image source={require('#/images/botanistes.png')} style={styles.buttonImage} />

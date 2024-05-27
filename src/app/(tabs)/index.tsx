@@ -83,6 +83,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     display: 'flex',
     alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   background: {
     flex: 1,
@@ -116,6 +118,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: -300,
   },
   card: {
     width: 350,

@@ -80,14 +80,10 @@ const styles = StyleSheet.create({
     width: 247,
     height: 250,
   },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 16,
-  },
   container_login: {
     flex: 1,
-    marginTop: -200,
+    position: 'absolute',
+    marginTop: 1200,
     justifyContent: 'center',
     alignItems: 'center',
   },

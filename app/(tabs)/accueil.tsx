@@ -88,24 +88,6 @@ const Accueil: React.FC = () => {
                     </PagerView>
                 </View>
             </ScrollView>
-            <View style={styles.nav}>
-                <TouchableOpacity onPress={() => handleButtonPress(1)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/chat.png')} style={styles.buttonImage} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleButtonPress(2)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/plantes.png')} style={styles.buttonImage} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleButtonPress(3)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/search.png')} style={styles.buttonImage} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleButtonPress(4)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/botanistes.png')} style={styles.buttonImage} />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleButtonPress(5)} style={styles.navButton}>
-                    <Image source={require('../../assets/images/gardes.png')} style={styles.buttonImage} />
-                </TouchableOpacity>
-            </View>
-
         </View>
     );
 };

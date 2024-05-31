@@ -65,7 +65,11 @@ const Login: React.FC = () => {
             <Text style={styles.titre}>
               Identification :
             </Text>
-            <TextInput onSubmitEditing={() => {passwordRef.current.focus(); }} blurOnSubmit={false} placeholder='Email' placeholderTextColor={'#888686'} value={email} onChangeText={setEmail} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
+            <TextInput onSubmitEditing={() => {
+              if (passwordRef.current != null) {
+                passwordRef.current.focus();
+              }
+              }} blurOnSubmit={false} placeholder='Email' placeholderTextColor={'#888686'} value={email} onChangeText={setEmail} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
             <TextInput ref={passwordRef} onSubmitEditing={handleSubmit} placeholder='Password' placeholderTextColor={'#888686'} value={password} onChangeText={setPassword} autoCapitalize="none" returnKeyType='go' secureTextEntry autoCorrect={false} style={styles.input} />
             <Button title="Se connecter" onPress={handleSubmit} buttonStyle={styles.customButton} textStyle={styles.customButtonText} />
             <TouchableOpacity onPress={handleRedirect}>

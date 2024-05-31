@@ -44,6 +44,8 @@ const Login: React.FC = () => {
       router.replace('accueil');
       Alert.alert('Success', JSON.stringify(data));
     } catch (error: any) {
+      console.error(error);
+      
       Alert.alert('Error', error.message);
     }
   };

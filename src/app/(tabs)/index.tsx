@@ -16,6 +16,7 @@ const Login: React.FC = () => {
   const passwordRef = useRef<TextInput>(null);
 
   const handleSubmit = async () => {
+    /*
     const url = process.env.EXPO_PUBLIC_KEYCLOACK_URL + '/realms/' + process.env.EXPO_PUBLIC_KEYCLOACK_REALM + '/protocol/openid-connect/token';
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -46,6 +47,8 @@ const Login: React.FC = () => {
     } catch (error: any) {
       Alert.alert('Error', error.message);
     }
+    */
+    router.replace('accueil');
   };
 
   function handleRedirect(event: GestureResponderEvent): void {

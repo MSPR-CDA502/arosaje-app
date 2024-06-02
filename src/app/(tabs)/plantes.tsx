@@ -11,8 +11,12 @@ const Plantes: React.FC = () => {
   const images = [require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png')];
 
     const handleDemande = () => {
-        router.push('./demande'); // Navigate to the Demande page
-      };
+      router.push('./demande'); // Navigate to the Demande page
+    };
+
+    const ajouterPlante = () => {
+      router.push('./ajouterPlante'); // Navigate to the Demande page
+    }
 
     const handlePlante = () => {
       console.log('Click');
@@ -36,6 +40,7 @@ const Plantes: React.FC = () => {
         </View>
         <View style={styles.div}>
           <Button buttonStyle={styles.demandeButton} textStyle={styles.demandeText} title={'Faire une demande de garde'} onPress={handleDemande}></Button>
+          <Button buttonStyle={styles.ajouterPlanteButton} textStyle={styles.ajouterPlanteText} title={'Ajouter une plante'} onPress={ajouterPlante}></Button>
           <View style={styles.planteList}>
             {plantList}
           </View>
@@ -85,13 +90,27 @@ const styles = StyleSheet.create({
   demandeText: {
     color: '#FFFFFF',
     fontFamily: 'KaushanScript',
+    textAlign: 'center',
     fontSize: 24
   },
   demandeButton: {
     backgroundColor: '#A2B3A1',
     borderRadius: 10,
     paddingVertical: 15,
-    paddingHorizontal: 40,
+    width: '90%',
+    marginTop: 50
+  },
+  ajouterPlanteText: {
+    color: '#FFFFFF',
+    fontFamily: 'KaushanScript',
+    textAlign: 'center',
+    fontSize: 24
+  },
+  ajouterPlanteButton: {
+    backgroundColor: '#86B883',
+    borderRadius: 10,
+    paddingVertical: 15,
+    width: '90%',
     marginTop: 50
   },
   planteList: {

@@ -27,7 +27,7 @@ export default function Layout() {
         <TouchableOpacity onPress={() => handleButtonPress('/chat')} style={styles.navButton}>
           <Image source={require('#/images/chat.png')} style={styles.buttonImage} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => handleButtonPress('./plantes')} style={styles.navButton}>
+        <TouchableOpacity onPress={() => handleButtonPress('/plantes')} style={styles.navButton}>
           <Image source={require('#/images/plantes.png')} style={styles.buttonImage} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleButtonPress('/accueil')} style={styles.navButton}>

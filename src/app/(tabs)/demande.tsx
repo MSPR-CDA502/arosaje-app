@@ -5,30 +5,7 @@ import Button from '../../components/Bouton';
 import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
 import SelectDropdown from 'react-native-select-dropdown';
-import { Calendar, DateData, LocaleConfig } from "react-native-calendars";
-
-LocaleConfig.locales['fr'] = {
-  monthNames: [
-    'Janvier',
-    'Février',
-    'Mars',
-    'Avril',
-    'Mai',
-    'Juin',
-    'Juillet',
-    'Août',
-    'Septembre',
-    'Octobre',
-    'Novembre',
-    'Décembre'
-  ],
-  monthNamesShort: ['Janv.', 'Févr.', 'Mars', 'Avril', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
-  dayNames: ['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'],
-  dayNamesShort: ['Dim.', 'Lun.', 'Mar.', 'Mer.', 'Jeu.', 'Ven.', 'Sam.'],
-  today: "Aujourd'hui"
-};
-
-LocaleConfig.defaultLocale = 'fr';
+import CalendarPicker from 'react-native-calendar-picker';
 
 const Demande: React.FC = () => {
   const listeAdresse = [
@@ -44,6 +21,8 @@ const Demande: React.FC = () => {
   const [adresseSelectionne, setAdresseSelectionne] = useState(false);
   const [chargement, setChargement] = useState(true);
   const [montrerCalendrier, setMontrerCalendrier] = useState(false);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
 
   const geocodeAddress = async (adresse: any) => {
     setChargement(true);
@@ -70,33 +49,18 @@ const Demande: React.FC = () => {
     geocodeAddress(adresse);
   };
 
-  const selectPeriod = (day: DateData) => {
-    console.log(day)
-    console.log('Period selected!')
-  };
-
   const envoyerDemande = () => {
     console.log('Demande envoyée !')
   };
-
-  /*
-  const onDateChange = (date, type) => {
+  
+  const onDateChange = (date: any, type: string) => {
     if (type === 'END_DATE') {
       setEndDate(date);
-      setShowCalendar(false);
     } else {
       setStartDate(date);
       setEndDate(null);
     }
-  };*/
-
-  let periode = {
-    '2012-05-21': {startingDay: true, color: '#50cebb', textColor: 'white'},
-    '2012-05-22': {color: '#70d7c7', textColor: 'white'},
-    '2012-05-23': {color: '#70d7c7', textColor: 'white', marked: true, dotColor: 'white'},
-    '2012-05-24': {color: '#70d7c7', textColor: 'white'},
-    '2012-05-25': {endingDay: true, color: '#50cebb', textColor: 'white'}
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -139,23 +103,32 @@ const Demande: React.FC = () => {
             <Text>Un problème est survenu</Text>
           )) : (<Text>Chargement en cours...</Text>)) : (<Text></Text>)}
           <Button buttonStyle={styles.buttons} textStyle={styles.buttonsText} title={'Plage de temps'} onPress={ () => {setMontrerCalendrier(true);}}></Button>
-          {montrerCalendrier ? (<Calendar
-            firstDay={1}
-            style={styles.calendar}
-            theme={{
-              backgroundColor: '#ffffff',
-              calendarBackground: '#ffffff',
-              textSectionTitleColor: '#b6c1cd',
-              selectedDayBackgroundColor: '#00adf5',
-              selectedDayTextColor: '#ffffff',
-              todayTextColor: '#00adf5',
-              dayTextColor: '#2d4150',
-              textDisabledColor: '#d9e',
-            }}
-            markingType={'period'}
-            onDayPress={day => {
-              selectPeriod(day)
-            }}
+          {montrerCalendrier ? (<CalendarPicker
+            weekdays={['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']}
+            months={[
+              'Janvier',
+              'Février',
+              'Mars',
+              'Avril',
+              'Mai',
+              'Juin',
+              'Juillet',
+              'Août',
+              'Septembre',
+              'Octobre',
+              'Novembre',
+              'Décembre'
+            ]}
+            previousTitle='<<<'
+            nextTitle='>>>'
+            startFromMonday={true}
+            allowRangeSelection={true}
+            minDate={Date.now()}
+            maxDate={new Date(2050, 12, 31)}
+            todayBackgroundColor="#f2e6ff"
+            selectedDayColor="#7300e6"
+            selectedDayTextColor="#FFFFFF"
+            onDateChange={onDateChange}
           />) : (<Text></Text>)}
           <Button buttonStyle={styles.envoyerDemandeButton} textStyle={styles.envoyerDemandeText} title={'Envoyer la demande'} onPress={envoyerDemande}></Button>
         </View>

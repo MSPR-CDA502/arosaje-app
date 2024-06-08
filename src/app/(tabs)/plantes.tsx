@@ -18,8 +18,8 @@ const Plantes: React.FC = () => {
       router.push('./ajouterPlante'); // Navigate to the Demande page
     }
 
-    const handlePlante = () => {
-      console.log('Click');
+    const handlePlante = (num: number) => {
+        router.replace(`plante/${num}`);
     }
 
   let  plantList =[];
@@ -27,7 +27,7 @@ const Plantes: React.FC = () => {
     plantList.push(
       <View style={styles.planteContainer} key={index}>
         <Image source={images[index]} style={styles.planteImage}/>
-        <Button title={`Plante ${index+1}`} onPress={handlePlante} buttonStyle={styles.planteButton} textStyle={styles.planteButtonText}/>
+        <Button title={`Plante ${index+1}`} onPress={() => {handlePlante(index+1)}} buttonStyle={styles.planteButton} textStyle={styles.planteButtonText}/>
       </View>
   );
   }

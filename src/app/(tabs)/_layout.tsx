@@ -8,7 +8,7 @@ export default function Layout() {
   const router = useRouter();
 
   const handleButtonPress = (route: string) => {
-    router.push(route);
+    router.replace(route);
   };
 
 

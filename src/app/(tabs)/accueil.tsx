@@ -43,7 +43,7 @@ const Accueil: React.FC = () => {
 
 
     const handleGardePress = (num: number) => {
-        router.replace(`garde/${num}`);
+        router.push(`garde/${num}`);
     };
     
     

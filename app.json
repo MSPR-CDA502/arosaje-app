@@ -20,7 +20,12 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "fr.nimzero.arosaje"
+      "package": "fr.nimzero.arosaje",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCcYPxQ5Zz5bDB2Rm2rZdzmmlIipiFsioY"
+        }
+      }
     },
     "web": {
       "bundler": "metro",
@@ -28,7 +33,8 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

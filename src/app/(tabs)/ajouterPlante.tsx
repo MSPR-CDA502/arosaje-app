@@ -63,12 +63,12 @@ const AjouterPlante = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={styles.textHeader}>Modifier une plante</Text>
+          <Text style={styles.textHeader}>Ajouter une plante</Text>
           <View style={styles.topline}><Text style={styles.textTopline}></Text></View>
         </View>
         <View style={styles.div}>
             <TextInput blurOnSubmit={false} placeholder='Nom' placeholderTextColor={'#888686'} value={plantName} onChangeText={setPlantName} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
-            <Button buttonStyle={styles.ajouterImageButton} textStyle={styles.ajouterImageText} title={'Modifier une photo'} onPress={() => {setSelectImage(true)}}></Button>
+            <Button buttonStyle={styles.ajouterImageButton} textStyle={styles.ajouterImageText} title={'Ajouter une photo'} onPress={() => {setSelectImage(true)}}></Button>
             {selectImage && (
                 <Button buttonStyle={styles.sourceImageButton} textStyle={styles.sourceImageText} title="Prendre depuis ma galerie" onPress={pickImage} />
             )}
@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
+    paddingBottom: 100
   },
   header: {
     height: 75,

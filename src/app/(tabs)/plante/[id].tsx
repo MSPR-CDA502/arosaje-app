@@ -7,7 +7,7 @@ import { useLocalSearchParams } from 'expo-router';
 
 const ModifierPlante = () => {
   const { id } = useLocalSearchParams();
-  const [plantName, setPlantName] = useState(id);
+  const [plantName, setPlantName] = useState('Plante ' + id?.toString());
   const [selectImage, setSelectImage] = useState(false);
   const [photo, setPhoto] = useState('');
 
@@ -65,7 +65,7 @@ const ModifierPlante = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={styles.textHeader}>Modifier la plante {id}</Text>
+          <Text style={styles.textHeader}>Modifier {plantName}</Text>
           <View style={styles.topline}><Text style={styles.textTopline}></Text></View>
         </View>
         <View style={styles.div}>
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
+    paddingBottom: 100
   },
   header: {
     height: 75,

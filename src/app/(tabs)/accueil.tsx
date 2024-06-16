@@ -4,9 +4,6 @@ import { StyleSheet, View, Text, ImageBackground, Image, ScrollView, TouchableOp
 import PagerView from 'react-native-pager-view';
 import { BlurView } from 'expo-blur';
 import Button from '@/components/Bouton';
-import { Address } from '@/models/address.model';
-import { getPlant } from '@/services/address.services'
-
 
 const FontImage = require('#/images/background.jpeg');
 const Plante_un = require('#/images/plante_un.png');
@@ -21,10 +18,7 @@ const Accueil: React.FC = () => {
     const pagerRef = useRef<PagerView>(null);
     const videoPagerRef = useRef<PagerView>(null);
 
-    const addresses: Address[] = [{streetAddress: '23 rue du Dépôt', postalCode: '62000', city: 'Arras', country: 'France'}]
-
     useEffect(() => {
-        console.log(getAddress(1));
         const interval = setInterval(() => {
             setCurrentPage(prevPage => (prevPage + 1) % 3);
         }, 3000); // Change page every 3 seconds

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Bouton';
 import { router } from 'expo-router';
 import {  Dimensions } from 'react-native';
+import axios from 'axios';
 const { width, height } = Dimensions.get('screen');
 
 
 const Plantes: React.FC = () => {
-  const images = [require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png')];
+  const idUser = '1'
+  const [images, setImages] = useState([require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png')]);
 
     const handleDemande = () => {
       router.push('./demande'); // Navigate to the Demande page
@@ -35,6 +37,21 @@ const Plantes: React.FC = () => {
       </View>
   );
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
+  
+        setImages(response.data.addresses);
+      } catch (err) {
+        console.error(err)
+      }
+    };
+
+  fetchData();
+}, []); // Ensure dependency array is empty to run only once
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>

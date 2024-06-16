@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '@/components/Bouton';
 import { useLocalSearchParams } from 'expo-router';
+import axios from 'axios';
 
 const ModifierPlante = () => {
   const { id } = useLocalSearchParams();
@@ -11,7 +12,12 @@ const ModifierPlante = () => {
   const [selectImage, setSelectImage] = useState(false);
   const [photo, setPhoto] = useState('');
 
-  const envoyerPlante = () => {
+  const envoyerPlante = async () => {
+    try {
+      const response = await axios.put('https://arosaje.nimzero.fr/api/plants/'+id?.toString())
+    } catch (err) {
+      console.error(err)
+    }
     console.log('Demande envoyée !')
   };
 
@@ -60,6 +66,21 @@ const ModifierPlante = () => {
     }
     setSelectImage(false);
   }
+
+  useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('https://arosaje.nimzero.fr/api/plants/'+id?.toString())
+
+      setPlantName(response.data.name);
+      setPhoto(response.data.photos[0])
+    } catch (err) {
+      console.error(err)
+    }
+  };
+
+  fetchData();
+}, []); // Ensure dependency array is empty to run only once
 
   return (
     <SafeAreaView style={styles.container}>

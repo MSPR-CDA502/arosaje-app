@@ -2,16 +2,32 @@ import React, { useState } from 'react';
 import Button from '@/components/Bouton';
 import { View, Text, Image, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import axios from 'axios';
 
 const AjouterAdresse = () => {
-
+  const idUser = '1';
   const [city, setCity] = useState('');
   const [country, setCountry] = useState('');
   const [region, setRegion] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
 
-  const envoyerAdresse = () => {
+  const envoyerAdresse = async () => {
+    try {
+      const response = await axios.patch('https://arosaje.nimzero.fr/api/users'+idUser, {
+        addresses: [
+          {
+            country: country,
+            region: region,
+            postalCode: postalCode,
+            city: city,
+            streetAddress: streetAddress
+          }
+        ]
+      })
+    } catch (err) {
+      console.error(err)
+    }
     console.log('Demande envoyée !')
   };
 

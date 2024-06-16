@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Bouton';
@@ -8,11 +8,32 @@ import SelectDropdown from 'react-native-select-dropdown';
 import CalendarPicker from 'react-native-calendar-picker';
 
 const Demande: React.FC = () => {
-  const listeAdresse = [
-    {adresseComplete: '23 Rue du Dépot, 62000 Arras'},
-    {adresseComplete: '35 rue Moïse LAMBERT, 59148 Flines-lez-Râches'},
-    {adresseComplete: '12 rue de Cambrai, 59000 Lille'}
-  ];
+  const idUser = '1';
+  const [listeAdresse, setListeAdresse] = useState([
+    {
+      id: '1',
+    city: 'Arras',
+    country: '',
+    streetAddress:  '23 Rue du Dépot',
+    postalCode: '62000',
+    region: ''},
+    {
+      id: '2',
+    city: 'Flines-lez-Râches',
+    country: '',
+    streetAddress:  '35 rue Moïse LAMBERT',
+    postalCode: '59148',
+    region: ''
+    },
+    {
+      id: '3',
+    city: 'Lille',
+    country: '',
+    streetAddress:  '12 rue de Cambrai',
+    postalCode: '59000',
+    region: ''
+    }
+  ]);
   const [region, setRegion] = useState<{
     latitude: number,
     longitude: number,
@@ -27,7 +48,7 @@ const Demande: React.FC = () => {
   const geocodeAddress = async (adresse: any) => {
     setChargement(true);
     try {
-      const response = await axios.get('https://nominatim.openstreetmap.org?q='+adresse.adresseComplete+'&format=json');
+      const response = await axios.get('https://nominatim.openstreetmap.org?q='+adresse.streetAddress+' '+adresse.postalCode+' '+adresse.city+' '+adresse.region+' '+adresse.country+'&format=json');
       if (response.data.length > 0) {
         const location = response.data[0];
         setRegion({
@@ -62,6 +83,20 @@ const Demande: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
+  
+        setListeAdresse(response.data.addresses);
+      } catch (err) {
+        console.error(err)
+      }
+    };
+
+  fetchData();
+}, []); // Ensure dependency array is empty to run only once
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -79,7 +114,7 @@ const Demande: React.FC = () => {
               return (
                 <View style={styles.dropdownButtonStyle}>
                   <Text style={styles.dropdownButtonTxtStyle}>
-                    {(selectedItem && selectedItem.adresseComplete) || 'Choisir une adresse'}
+                    {(selectedItem && selectedItem.streetAddress+' '+selectedItem.postalCode+' '+selectedItem.city+' '+selectedItem.region+' '+selectedItem.country) || 'Choisir une adresse'}
                   </Text>
                 </View>
               );
@@ -87,7 +122,7 @@ const Demande: React.FC = () => {
             renderItem={(item, index, isSelected) => {
               return (
                 <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
-                  <Text style={styles.dropdownItemTxtStyle}>{item.adresseComplete}</Text>
+                  <Text style={styles.dropdownItemTxtStyle}>{item.streetAddress+' '+item.postalCode+' '+item.city+' '+item.region+' '+item.country}</Text>
                 </View>
               );
             }}

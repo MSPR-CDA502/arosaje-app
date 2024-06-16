@@ -1,15 +1,55 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@/components/Bouton';
 import { View, Text, Image, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import axios from 'axios';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const AjouterPlante = () => {
+  const idUser = '1'
   const [plantName, setPlantName] = useState('');
   const [selectImage, setSelectImage] = useState(false);
   const [photo, setPhoto] = useState('');
+  const [address, setAddress] = useState({});
+  const [listeAdresse, setListeAdresse] = useState([
+    {
+      id: '1',
+    city: 'Arras',
+    country: '',
+    streetAddress:  '23 Rue du Dépot',
+    postalCode: '62000',
+    region: ''},
+    {
+      id: '2',
+    city: 'Flines-lez-Râches',
+    country: '',
+    streetAddress:  '35 rue Moïse LAMBERT',
+    postalCode: '59148',
+    region: ''
+    },
+    {
+      id: '3',
+    city: 'Lille',
+    country: '',
+    streetAddress:  '12 rue de Cambrai',
+    postalCode: '59000',
+    region: ''
+    }
+  ]);
 
-  const envoyerPlante = () => {
+
+  const envoyerPlante = async () => {
+    try {
+      const response = await axios.post('https://arosaje.nimzero.fr/api/plants', {
+        owner: idUser,
+        name: plantName,
+        photos: photo,
+        address: address
+      })
+    } catch (err) {
+      console.error(err)
+    }
     console.log('Demande envoyée !')
   };
 
@@ -59,6 +99,20 @@ const AjouterPlante = () => {
     setSelectImage(false);
   }
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
+  
+        setListeAdresse(response.data.addresses);
+      } catch (err) {
+        console.error(err)
+      }
+    };
+
+  fetchData();
+}, []); // Ensure dependency array is empty to run only once
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -82,6 +136,30 @@ const AjouterPlante = () => {
                 resizeMode="contain"
                 />
             )}
+            <SelectDropdown
+            data={listeAdresse}
+            onSelect={(selectedItem, index) => {
+              setAddress(selectedItem);
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  <Text style={styles.dropdownButtonTxtStyle}>
+                    {(selectedItem && selectedItem.streetAddress+' '+selectedItem.postalCode+' '+selectedItem.city+' '+selectedItem.region+' '+selectedItem.country) || 'Choisir une adresse'}
+                  </Text>
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+                  <Text style={styles.dropdownItemTxtStyle}>{item.streetAddress+' '+item.postalCode+' '+item.city+' '+item.region+' '+item.country}</Text>
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
             <Button buttonStyle={styles.envoyerPlanteButton} textStyle={styles.envoyerPlanteText} title={'Ajouter la plante'} onPress={envoyerPlante}></Button>
         </View>
       </ScrollView>
@@ -140,6 +218,47 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: 'rgba(135, 185, 152, 0.49)',
     marginTop: 20,
+  },
+  dropdownButtonStyle: {
+    backgroundColor: 'rgba(135, 185, 152, 0.49)',
+    borderRadius: 10,
+    paddingVertical: 15,
+    width: '90%',
+    marginTop: 30
+  },
+  dropdownButtonTxtStyle: {
+    color: '#FFFFFF',
+    fontFamily: 'KaushanScript',
+    textAlign: 'center',
+    fontSize: 24
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 24,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    color: '#000000',
+    fontFamily: 'KaushanScript',
+    textAlign: 'center',
+    fontSize: 24,
+    width: '90%'
+  },
+  dropdownItemIconStyle: {
+    color: '#000000',
+    fontFamily: 'KaushanScript',
+    textAlign: 'center',
+    fontSize: 24
   },
   ajouterImageText: {
     color: '#FFFFFF',

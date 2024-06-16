@@ -18,6 +18,10 @@ const Plantes: React.FC = () => {
       router.push('./ajouterPlante'); // Navigate to the Demande page
     }
 
+    const ajouterAdresse = () => {
+      router.push('./ajouterAdresse'); // Navigate to the Demande page
+    }
+
     const handlePlante = (num: number) => {
         router.replace(`plante/${num}`);
     }
@@ -40,6 +44,7 @@ const Plantes: React.FC = () => {
         </View>
         <View style={styles.div}>
           <Button buttonStyle={styles.demandeButton} textStyle={styles.demandeText} title={'Faire une demande de garde'} onPress={handleDemande}></Button>
+          <Button buttonStyle={styles.ajouterPlanteButton} textStyle={styles.ajouterPlanteText} title={'Ajouter une adresse'} onPress={ajouterAdresse}></Button>
           <Button buttonStyle={styles.ajouterPlanteButton} textStyle={styles.ajouterPlanteText} title={'Ajouter une plante'} onPress={ajouterPlante}></Button>
           <View style={styles.planteList}>
             {plantList}

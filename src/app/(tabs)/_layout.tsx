@@ -1,8 +1,6 @@
-// app/(tabs)/_layout.tsx
-
 import React from 'react';
-import { View, TouchableOpacity, Image, StyleSheet } from 'react-native';
-import { Slot, useRouter, usePathname } from 'expo-router';
+import { View, TouchableOpacity, Image, StyleSheet, Text } from 'react-native';
+import { Slot, useRouter, Redirect } from 'expo-router';
 
 export default function Layout() {
   const router = useRouter();
@@ -10,14 +8,6 @@ export default function Layout() {
   const handleButtonPress = (route: string) => {
     router.replace(route);
   };
-
-
-  console.log(usePathname());
-  // Si c'est la page de connexion, ne rend pas la barre de navigation inférieure
-  if (usePathname() === '/') {
-    return (
-      <Slot />);
-  }
 
   // Si ce n'est pas la page de connexion, rend la barre de navigation inférieure
   return (

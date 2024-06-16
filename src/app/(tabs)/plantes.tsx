@@ -4,8 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Bouton';
 import { router } from 'expo-router';
 import {  Dimensions } from 'react-native';
-const { width, height } = Dimensions.get('screen');
 
+const { width, height } = Dimensions.get('screen');
 
 const Plantes: React.FC = () => {
   const images = [require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png')];
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderBottomWidth: 1.5,
-    
+
   },
   textTopline: {
     textAlign: 'center',

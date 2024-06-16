@@ -4,11 +4,13 @@ import * as WebBrowser from 'expo-web-browser';
 import { TokenResponse, TokenResponseConfig, exchangeCodeAsync, fetchUserInfoAsync, makeRedirectUri, useAuthRequest, useAutoDiscovery } from 'expo-auth-session';
 import { ThemedText } from '@/components/ThemedText';
 import { router } from 'expo-router';
+import { useStorageState } from '@/hooks/useStorageState';
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function SignIn() {
   const discovery = useAutoDiscovery('https://auth.nimzero.fr/realms/arosaje');
+  const [[isLoading, session], setSession] = useStorageState('session');
   const [code, setCode] = useState<string | null>(null);
   const [token, setToken] = useState<TokenResponse | null>(null);
 
@@ -73,6 +75,7 @@ export default function SignIn() {
 
       const tokenConfig: TokenResponseConfig = token.getRequestConfig();
       console.log(tokenConfig);
+      setSession(tokenConfig.accessToken);
 
       fetchUserInfoAsync(
         {

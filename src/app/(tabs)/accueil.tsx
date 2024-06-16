@@ -5,6 +5,7 @@ import PagerView from 'react-native-pager-view';
 import { BlurView } from 'expo-blur';
 import Button from '../../components/Bouton';
 import { useSession } from '@/context/AuthContext';
+import { useApiService } from '@/hooks/useApiService';
 
 
 const FontImage = require('#/images/background.jpeg');
@@ -35,6 +36,10 @@ const Accueil: React.FC = () => {
 
         return () => clearInterval(videoInterval); // Clean up on unmount
     }, []);
+
+    const {getUsers} = useApiService();
+
+    getUsers().then(data => console.log('api users', data));
 
     const handleSubmit = () => {
         // Ajouter la logique de soumission ici

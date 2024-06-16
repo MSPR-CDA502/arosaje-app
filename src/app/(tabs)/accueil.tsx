@@ -4,6 +4,9 @@ import { StyleSheet, View, Text, ImageBackground, Image, ScrollView, TouchableOp
 import PagerView from 'react-native-pager-view';
 import { BlurView } from 'expo-blur';
 import Button from '@/components/Bouton';
+import { useSession } from '@/context/AuthContext';
+import { useApiService } from '@/hooks/useApiService';
+
 
 const FontImage = require('#/images/background.jpeg');
 const Plante_un = require('#/images/plante_un.png');
@@ -17,7 +20,7 @@ const Accueil: React.FC = () => {
     const [currentVideoPage, setCurrentVideoPage] = useState(0);
     const pagerRef = useRef<PagerView>(null);
     const videoPagerRef = useRef<PagerView>(null);
-
+    const {signOut} = useSession();
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentPage(prevPage => (prevPage + 1) % 3);
@@ -34,18 +37,19 @@ const Accueil: React.FC = () => {
         return () => clearInterval(videoInterval); // Clean up on unmount
     }, []);
 
+    const {getUsers} = useApiService();
+
+    getUsers().then(data => console.log('api users', data));
+
     const handleSubmit = () => {
         // Ajouter la logique de soumission ici
         console.log('redirection');
         router.replace('./accueil');
     };
 
-
     const handleGardePress = (num: number) => {
         router.push(`garde/${num}`);
     };
-    
-    
 
     const handleButtonPress = (buttonNumber: number) => {
         console.log(`Button ${buttonNumber} pressed`);
@@ -68,6 +72,7 @@ const Accueil: React.FC = () => {
                     <Button title="En Savoir Plus" onPress={handleSubmit} buttonStyle={styles.customButton} textStyle={styles.customButtonText} />
                 </View>
                 <Image source={Plante_un} style={styles.image_plante_bis} />
+                <Button title="logout" onPress={signOut} buttonStyle={styles.customButton} textStyle={styles.customButtonText} />
                 <View style={styles.carouselun}>
                     <Text style={styles.title_section}>Mes Gardes Récentes</Text>
                     <PagerView ref={pagerRef} style={styles.containercarousel} initialPage={0}>

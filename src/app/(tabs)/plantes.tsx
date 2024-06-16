@@ -7,7 +7,6 @@ import {  Dimensions } from 'react-native';
 import axios from 'axios';
 const { width, height } = Dimensions.get('screen');
 
-
 const Plantes: React.FC = () => {
   const idUser = '1';
   const [listePlante, setListePlante] = useState([{id: '1', name: 'Plante 1'}, {id: '2', name: 'Plante 2'}, {id: '4', name: 'Plante 3'}, {id: '6', name: 'Plante 4'}, {id: '9', name: 'Rose'}]);
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopWidth: 1,
     borderBottomWidth: 1.5,
-    
+
   },
   textTopline: {
     textAlign: 'center',

@@ -44,7 +44,7 @@ const AjouterPlante = () => {
       const response = await axios.post('https://arosaje.nimzero.fr/api/plants', {
         owner: idUser,
         name: plantName,
-        photos: photo,
+        photos: [photo],
         address: address
       })
     } catch (err) {

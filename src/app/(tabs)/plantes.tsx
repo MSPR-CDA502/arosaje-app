@@ -9,7 +9,8 @@ const { width, height } = Dimensions.get('screen');
 
 
 const Plantes: React.FC = () => {
-  const idUser = '1'
+  const idUser = '1';
+  const [listePlante, setListePlante] = useState([{id: '1', name: 'Plante 1'}, {id: '2', name: 'Plante 2'}, {id: '4', name: 'Plante 3'}, {id: '6', name: 'Plante 4'}, {id: '9', name: 'Rose'}]);
   const [images, setImages] = useState([require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png')]);
 
     const handleDemande = () => {
@@ -29,11 +30,11 @@ const Plantes: React.FC = () => {
     }
 
   let  plantList =[];
-  for (let index = 0; index < images.length; index++) {
+  for (let index = 0; index < listePlante.length; index++) {
     plantList.push(
       <View style={styles.planteContainer} key={index}>
         <Image source={images[index]} style={styles.planteImage}/>
-        <Button title={`Plante ${index+1}`} onPress={() => {handlePlante(index+1)}} buttonStyle={styles.planteButton} textStyle={styles.planteButtonText}/>
+        <Button title={`${listePlante[index].name}`} onPress={() => {handlePlante(parseInt(listePlante[index].id))}} buttonStyle={styles.planteButton} textStyle={styles.planteButtonText}/>
       </View>
   );
   }
@@ -43,7 +44,7 @@ const Plantes: React.FC = () => {
       try {
         const response = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
   
-        setImages(response.data.addresses);
+        setListePlante(response.data.plants);
       } catch (err) {
         console.error(err)
       }

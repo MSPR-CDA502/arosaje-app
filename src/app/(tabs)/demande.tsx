@@ -40,6 +40,7 @@ const Demande: React.FC = () => {
     latitudeDelta: number,
     longitudeDelta: number} | null>(null);
   const [adresseSelectionne, setAdresseSelectionne] = useState(false);
+  const [address, setAddress] = useState({});
   const [chargement, setChargement] = useState(true);
   const [montrerCalendrier, setMontrerCalendrier] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -67,10 +68,21 @@ const Demande: React.FC = () => {
 
   const selectAdresse = (adresse: any) => {
     setAdresseSelectionne(true);
+    setAddress(address)
     geocodeAddress(adresse);
   };
 
-  const envoyerDemande = () => {
+  const envoyerDemande = async () => {
+    try {
+      const response = await axios.post('https://arosaje.nimzero.fr/api/request', {
+        owner: idUser,
+        address: address,
+        startDate: startDate,
+        endDate: endDate
+      })
+    } catch (err) {
+      console.error(err)
+    }
     console.log('Demande envoyée !')
   };
   

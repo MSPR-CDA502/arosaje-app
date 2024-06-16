@@ -5,16 +5,54 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '@/components/Bouton';
 import { useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
+import SelectDropdown from 'react-native-select-dropdown';
 
 const ModifierPlante = () => {
+  const idUser = '1';
   const { id } = useLocalSearchParams();
   const [plantName, setPlantName] = useState('Plante ' + id?.toString());
   const [selectImage, setSelectImage] = useState(false);
   const [photo, setPhoto] = useState('');
+  const [address, setAddress] = useState({
+    id: '1',
+  city: 'Arras',
+  country: '',
+  streetAddress:  '23 Rue du Dépot',
+  postalCode: '62000',
+  region: ''});
+  const [listeAdresse, setListeAdresse] = useState([
+    {
+      id: '1',
+    city: 'Arras',
+    country: '',
+    streetAddress:  '23 Rue du Dépot',
+    postalCode: '62000',
+    region: ''},
+    {
+      id: '2',
+    city: 'Flines-lez-Râches',
+    country: '',
+    streetAddress:  '35 rue Moïse LAMBERT',
+    postalCode: '59148',
+    region: ''
+    },
+    {
+      id: '3',
+    city: 'Lille',
+    country: '',
+    streetAddress:  '12 rue de Cambrai',
+    postalCode: '59000',
+    region: ''
+    }
+  ]);
 
   const envoyerPlante = async () => {
     try {
-      const response = await axios.put('https://arosaje.nimzero.fr/api/plants/'+id?.toString())
+      const response = await axios.patch('https://arosaje.nimzero.fr/api/plants/'+id?.toString(), {
+        name: plantName,
+        photos: [photo],
+        address: address
+      })
     } catch (err) {
       console.error(err)
     }
@@ -70,10 +108,15 @@ const ModifierPlante = () => {
   useEffect(() => {
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://arosaje.nimzero.fr/api/plants/'+id?.toString())
+      const userResponse = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
 
-      setPlantName(response.data.name);
-      setPhoto(response.data.photos[0])
+      setListeAdresse(userResponse.data.addresses);
+
+      const plantResponse = await axios.get('https://arosaje.nimzero.fr/api/plants/'+id?.toString())
+
+      setPlantName(plantResponse.data.name);
+      setPhoto(plantResponse.data.photos[0]);
+      setAddress(plantResponse.data.address);
     } catch (err) {
       console.error(err)
     }
@@ -91,7 +134,7 @@ const ModifierPlante = () => {
         </View>
         <View style={styles.div}>
             <TextInput blurOnSubmit={false} placeholder='Nom' placeholderTextColor={'#888686'} value={plantName} onChangeText={setPlantName} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
-            <Button buttonStyle={styles.ajouterImageButton} textStyle={styles.ajouterImageText} title={'Modifier une photo'} onPress={() => {setSelectImage(true)}}></Button>
+            <Button buttonStyle={styles.ajouterImageButton} textStyle={styles.ajouterImageText} title={'Modifier la photo'} onPress={() => {setSelectImage(true)}}></Button>
             {selectImage && (
                 <Button buttonStyle={styles.sourceImageButton} textStyle={styles.sourceImageText} title="Prendre depuis ma galerie" onPress={pickImage} />
             )}
@@ -105,6 +148,30 @@ const ModifierPlante = () => {
                 resizeMode="contain"
                 />
             )}
+            <SelectDropdown
+            data={listeAdresse}
+            onSelect={(selectedItem, index) => {
+              setAddress(selectedItem);
+            }}
+            renderButton={(selectedItem, isOpened) => {
+              return (
+                <View style={styles.dropdownButtonStyle}>
+                  <Text style={styles.dropdownButtonTxtStyle}>
+                    {(selectedItem && selectedItem.streetAddress+' '+selectedItem.postalCode+' '+selectedItem.city+' '+selectedItem.region+' '+selectedItem.country) || address.streetAddress+' '+address.postalCode+' '+address.city+' '+address.region+' '+address.country}
+                  </Text>
+                </View>
+              );
+            }}
+            renderItem={(item, index, isSelected) => {
+              return (
+                <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+                  <Text style={styles.dropdownItemTxtStyle}>{item.streetAddress+' '+item.postalCode+' '+item.city+' '+item.region+' '+item.country}</Text>
+                </View>
+              );
+            }}
+            showsVerticalScrollIndicator={false}
+            dropdownStyle={styles.dropdownMenuStyle}
+          />
             <Button buttonStyle={styles.envoyerPlanteButton} textStyle={styles.envoyerPlanteText} title={'Modifier la plante'} onPress={envoyerPlante}></Button>
         </View>
       </ScrollView>
@@ -144,7 +211,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderBottomWidth: 1.5,    
   },
-    textTopline: {
+  textTopline: {
     textAlign: 'center',
     color: '#47635C',
     fontFamily: 'KaushanScript',
@@ -164,6 +231,47 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     backgroundColor: 'rgba(135, 185, 152, 0.49)',
     marginTop: 20,
+  },
+  dropdownButtonStyle: {
+    backgroundColor: 'rgba(135, 185, 152, 0.49)',
+    borderRadius: 10,
+    paddingVertical: 15,
+    width: '90%',
+    marginTop: 30
+  },
+  dropdownButtonTxtStyle: {
+    color: '#FFFFFF',
+    fontFamily: 'KaushanScript',
+    textAlign: 'center',
+    fontSize: 24
+  },
+  dropdownButtonArrowStyle: {
+    fontSize: 24,
+  },
+  dropdownMenuStyle: {
+    backgroundColor: '#E9ECEF',
+    borderRadius: 8,
+  },
+  dropdownItemStyle: {
+    width: '100%',
+    flexDirection: 'row',
+    paddingHorizontal: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  dropdownItemTxtStyle: {
+    color: '#000000',
+    fontFamily: 'KaushanScript',
+    textAlign: 'center',
+    fontSize: 24,
+    width: '90%'
+  },
+  dropdownItemIconStyle: {
+    color: '#000000',
+    fontFamily: 'KaushanScript',
+    textAlign: 'center',
+    fontSize: 24
   },
   ajouterImageText: {
     color: '#FFFFFF',

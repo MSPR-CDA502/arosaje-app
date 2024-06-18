@@ -5,52 +5,60 @@ import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import axios from 'axios';
 import SelectDropdown from 'react-native-select-dropdown';
+import { useApiService } from '@/hooks/useApiService';
+import { router } from 'expo-router';
 
 const AjouterPlante = () => {
-  const idUser = '1'
+  const {postPhoto, postPlant, getMyself, getAddress} = useApiService();
+
+  const [user, setUser] = useState({id: '0', addresses: []});
   const [plantName, setPlantName] = useState('');
   const [selectImage, setSelectImage] = useState(false);
   const [photo, setPhoto] = useState('');
-  const [address, setAddress] = useState({});
-  const [listeAdresse, setListeAdresse] = useState([
-    {
-      id: '1',
-    city: 'Arras',
-    country: '',
-    streetAddress:  '23 Rue du Dépot',
-    postalCode: '62000',
-    region: ''},
-    {
-      id: '2',
-    city: 'Flines-lez-Râches',
-    country: '',
-    streetAddress:  '35 rue Moïse LAMBERT',
-    postalCode: '59148',
-    region: ''
-    },
-    {
-      id: '3',
-    city: 'Lille',
-    country: '',
-    streetAddress:  '12 rue de Cambrai',
-    postalCode: '59000',
-    region: ''
-    }
-  ]);
+  const [address, setAddress] = useState({id: '0'});
+  const [listeAdresse, setListeAdresse] = useState(
+    [
+      {
+        id: '1',
+        city: 'Arras',
+        country: '',
+        streetAddress:  '23 Rue du Dépot',
+        postalCode: '62000',
+        region: ''
+      }
+    ]
+  );
 
 
   const envoyerPlante = async () => {
-    try {
-      const response = await axios.post('https://arosaje.nimzero.fr/api/plants', {
-        owner: idUser,
-        name: plantName,
-        photos: [photo],
-        address: address
-      })
-    } catch (err) {
-      console.error(err)
+    if (plantName != "" && address.id != '0') {
+      try {
+        //if (photo != "") {
+          await postPlant({
+            owner: 'api/users/'+user.id,
+            name: plantName,
+            photos: [],
+            address: 'api/addresses/'+address.id
+          })
+          /*
+        } else {
+          const photoResponse = await postPhoto({photo: photo})
+          await postPlant({
+            owner: 'api/users/'+user.id,
+            name: plantName,
+            photos: ['api/photos/'+photoResponse.id],
+            address: 'api/addresses/'+address.id
+          })
+        }*/
+  
+        console.log('Demande envoyée !')
+        router.push('./plantes');
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      alert('Il manque des informations !')
     }
-    console.log('Demande envoyée !')
   };
 
   const pickImage = async () => {
@@ -102,11 +110,17 @@ const AjouterPlante = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
+        const response =  await getMyself();
   
-        setListeAdresse(response.data.addresses);
+        setUser(response)
+        let list = []
+        for (const address of response.addresses) {
+          const idAddress = address.slice(-1);
+          list.push(await getAddress(idAddress))
+        }
+        setListeAdresse(list)
       } catch (err) {
-        console.error(err)
+        console.error('Fetch error : '+err)
       }
     };
 

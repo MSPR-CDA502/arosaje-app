@@ -3,13 +3,15 @@ import { View, Text, Image, StyleSheet, ScrollView, TextInput, Platform } from '
 import * as ImagePicker from 'expo-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '@/components/Bouton';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import SelectDropdown from 'react-native-select-dropdown';
+import { useApiService } from '@/hooks/useApiService';
 
 const ModifierPlante = () => {
-  const idUser = '1';
+  const [user, setUser] = useState({id: '0', addresses: []});
   const { id } = useLocalSearchParams();
+  const [originalPlantName, setOriginalPlantName] = useState('Plante ' + id?.toString());
   const [plantName, setPlantName] = useState('Plante ' + id?.toString());
   const [selectImage, setSelectImage] = useState(false);
   const [photo, setPhoto] = useState('');
@@ -27,36 +29,36 @@ const ModifierPlante = () => {
     country: '',
     streetAddress:  '23 Rue du Dépot',
     postalCode: '62000',
-    region: ''},
-    {
-      id: '2',
-    city: 'Flines-lez-Râches',
-    country: '',
-    streetAddress:  '35 rue Moïse LAMBERT',
-    postalCode: '59148',
-    region: ''
-    },
-    {
-      id: '3',
-    city: 'Lille',
-    country: '',
-    streetAddress:  '12 rue de Cambrai',
-    postalCode: '59000',
-    region: ''
-    }
+    region: ''}
   ]);
+  const {getMyself, getPlant, getAddress, patchPlant} = useApiService();
 
-  const envoyerPlante = async () => {
-    try {
-      const response = await axios.patch('https://arosaje.nimzero.fr/api/plants/'+id?.toString(), {
-        name: plantName,
-        photos: [photo],
-        address: address
-      })
-    } catch (err) {
-      console.error(err)
+  const modifierPlante = async () => {
+    if (plantName != "" && address.id != '0') {
+      try {
+        //if (photo != "") {
+          await patchPlant(id?.toString()!,{
+            name: plantName,
+            photos: [],
+            address: 'api/addresses/'+address.id
+          })
+          /*
+        } else {
+          const photoResponse = await postPhoto({photo: photo})
+          await await patchPlant(id?.toString()!,{
+            name: plantName,
+            photos: ['api/photos/'+photoResponse.id],
+            address: 'api/addresses/'+address.id
+          })
+        }*/
+        console.log('Demande envoyée !')
+        router.push('../plantes');
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      alert('Il manque des informations !')
     }
-    console.log('Demande envoyée !')
   };
 
   const pickImage = async () => {
@@ -108,15 +110,25 @@ const ModifierPlante = () => {
   useEffect(() => {
   const fetchData = async () => {
     try {
-      const userResponse = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
+      const userResponse =  await getMyself();
 
-      setListeAdresse(userResponse.data.addresses);
+      setUser(userResponse);
 
-      const plantResponse = await axios.get('https://arosaje.nimzero.fr/api/plants/'+id?.toString())
+      let list = []
+      for (const address of userResponse.addresses) {
+        const idAddress = address.slice(-1);
+        list.push(await getAddress(idAddress))
+      }
+      setListeAdresse(list)
 
-      setPlantName(plantResponse.data.name);
-      setPhoto(plantResponse.data.photos[0]);
-      setAddress(plantResponse.data.address);
+      const plantResponse = await getPlant(id?.toString()!)
+
+      setOriginalPlantName(plantResponse.name);
+      setPlantName(plantResponse.name);
+      setPhoto(plantResponse.photos[0] ? plantResponse.photos[0] : '');
+
+
+      setAddress(await getAddress(plantResponse.address.slice(-1)));
     } catch (err) {
       console.error(err)
     }
@@ -129,7 +141,7 @@ const ModifierPlante = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.header}>
-          <Text style={styles.textHeader}>Modifier {plantName}</Text>
+          <Text style={styles.textHeader}>Modifier {originalPlantName}</Text>
           <View style={styles.topline}><Text style={styles.textTopline}></Text></View>
         </View>
         <View style={styles.div}>
@@ -172,7 +184,7 @@ const ModifierPlante = () => {
             showsVerticalScrollIndicator={false}
             dropdownStyle={styles.dropdownMenuStyle}
           />
-            <Button buttonStyle={styles.envoyerPlanteButton} textStyle={styles.envoyerPlanteText} title={'Modifier la plante'} onPress={envoyerPlante}></Button>
+            <Button buttonStyle={styles.modifierPlanteButton} textStyle={styles.modifierPlanteText} title={'Modifier la plante'} onPress={modifierPlante}></Button>
         </View>
       </ScrollView>
     </SafeAreaView> 
@@ -299,13 +311,13 @@ const styles = StyleSheet.create({
     width: '75%',
     marginTop: 20
   },
-  envoyerPlanteText: {
+  modifierPlanteText: {
     color: '#FFFFFF',
     fontFamily: 'KaushanScript',
     textAlign: 'center',
     fontSize: 24
   },
-  envoyerPlanteButton: {
+  modifierPlanteButton: {
     backgroundColor: '#86B883',
     borderRadius: 10,
     paddingVertical: 15,

@@ -4,13 +4,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Button from '../../components/Bouton';
 import { router } from 'expo-router';
 import {  Dimensions } from 'react-native';
-import axios from 'axios';
+import { useStorageState } from '@/hooks/useStorageState';
+import { useApiService } from '@/hooks/useApiService';
 const { width, height } = Dimensions.get('screen');
 
 const Plantes: React.FC = () => {
-  const idUser = '1';
-  const [listePlante, setListePlante] = useState([{id: '1', name: 'Plante 1'}, {id: '2', name: 'Plante 2'}, {id: '4', name: 'Plante 3'}, {id: '6', name: 'Plante 4'}, {id: '9', name: 'Rose'}]);
-  const [images, setImages] = useState([require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png'), require('#/images/plante_garde.png')]);
+  const emailUser = useStorageState('email');
+  const {getMyself, getPlant} = useApiService();
+
+  const [idUser, setIdUser] = useState('0');
+  const [listePlante, setListePlante] = useState([{id: '9', name: 'Rose', photos: []}]);
 
     const handleDemande = () => {
       router.push('./demande'); // Navigate to the Demande page
@@ -32,7 +35,7 @@ const Plantes: React.FC = () => {
   for (let index = 0; index < listePlante.length; index++) {
     plantList.push(
       <View style={styles.planteContainer} key={index}>
-        <Image source={images[index]} style={styles.planteImage}/>
+        <Image source={listePlante[index].photos[0] ? listePlante[index].photos[0] : require('#/images/plante_garde.png')} style={styles.planteImage}/>
         <Button title={`${listePlante[index].name}`} onPress={() => {handlePlante(parseInt(listePlante[index].id))}} buttonStyle={styles.planteButton} textStyle={styles.planteButtonText}/>
       </View>
   );
@@ -41,9 +44,16 @@ const Plantes: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
-  
-        setListePlante(response.data.plants);
+        const response =  await getMyself();
+
+        setIdUser(response.id)
+        let list = []
+        for (const plant of response.plants) {
+          const idPlant = plant.slice(-1);
+          let plantResponse = await getPlant(idPlant)
+          list.push(plantResponse)
+        }
+        setListePlante(list)
       } catch (err) {
         console.error(err)
       }

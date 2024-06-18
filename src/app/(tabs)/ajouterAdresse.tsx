@@ -1,35 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@/components/Bouton';
 import { View, Text, Image, StyleSheet, ScrollView, TextInput, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import axios from 'axios';
+import { useStorageState } from '@/hooks/useStorageState';
+import { useApiService } from '@/hooks/useApiService';
+import { router } from 'expo-router';
 
 const AjouterAdresse = () => {
-  const idUser = '1';
+  const emailUser = useStorageState('email');
+  const {postAddress, getMyself} = useApiService();
+
+  const [user, setUser] = useState({id: '0', addresses: []});
   const [city, setCity] = useState('');
-  const [country, setCountry] = useState('');
+  const country = 'FR';
+  //const [country, setCountry] = useState('');
   const [region, setRegion] = useState('');
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
 
   const envoyerAdresse = async () => {
-    try {
-      const response = await axios.patch('https://arosaje.nimzero.fr/api/users'+idUser, {
-        addresses: [
-          {
-            country: country,
-            region: region,
-            postalCode: postalCode,
-            city: city,
-            streetAddress: streetAddress
-          }
-        ]
-      })
-    } catch (err) {
-      console.error(err)
+    if (streetAddress != "" && city !="" && postalCode !="" && region !="") {
+      try {
+        await postAddress({
+          user: 'api/users/'+user.id,
+          country: country,
+          region: region,
+          city: city,
+          postalCode: postalCode,
+          streetAddress: streetAddress
+        })
+        console.log('Demande envoyée !')
+        router.push('./plantes');
+      } catch (err) {
+        console.error(err)
+      }
+    } else {
+      alert('Il manque des informations !')
     }
-    console.log('Demande envoyée !')
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response =  await getMyself();
+
+        setUser(response)
+      } catch (err) {
+        console.error(err)
+      }
+    };
+
+  fetchData();
+}, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -43,7 +65,7 @@ const AjouterAdresse = () => {
             <TextInput blurOnSubmit={false} placeholder='Ville' placeholderTextColor={'#888686'} value={city} onChangeText={setCity} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
             <TextInput blurOnSubmit={false} placeholder='Code postal' placeholderTextColor={'#888686'} value={postalCode} onChangeText={setPostalCode} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
             <TextInput blurOnSubmit={false} placeholder='Région' placeholderTextColor={'#888686'} value={region} onChangeText={setRegion} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
-            <TextInput blurOnSubmit={false} placeholder='Pays' placeholderTextColor={'#888686'} value={country} onChangeText={setCountry} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
+            <TextInput blurOnSubmit={false} placeholder='Pays' placeholderTextColor={'#888686'} value={country} autoCapitalize="none" returnKeyType="next" enterKeyHint='next' style={styles.input} />
             <Button buttonStyle={styles.envoyerAdresseButton} textStyle={styles.envoyerAdresseText} title={'Ajouter l\'adresse'} onPress={envoyerAdresse}></Button>
         </View>
       </ScrollView>

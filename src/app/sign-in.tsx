@@ -85,6 +85,7 @@ export default function SignIn() {
       )
         .then(data => {
           console.log(data);
+          //setStorageItemAsync('email', data.email)
           router.replace('/accueil');
         })
         .catch(err => console.log(err));

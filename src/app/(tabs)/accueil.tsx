@@ -6,6 +6,7 @@ import { BlurView } from 'expo-blur';
 import Button from '@/components/Bouton';
 import { useSession } from '@/context/AuthContext';
 import { useApiService } from '@/hooks/useApiService';
+import { useStorageState } from '@/hooks/useStorageState';
 
 
 const FontImage = require('#/images/background.jpeg');
@@ -16,11 +17,14 @@ const Videos_deux = require('#/images/videos_deux.jpg');
 const Videos_trois = require('#/images/videos_trois.jpg');
 
 const Accueil: React.FC = () => {
+    const emailUser = useStorageState('email');
     const [currentPage, setCurrentPage] = useState(0);
     const [currentVideoPage, setCurrentVideoPage] = useState(0);
     const pagerRef = useRef<PagerView>(null);
     const videoPagerRef = useRef<PagerView>(null);
     const {signOut} = useSession();
+    const {getMyself} = useApiService();
+
     useEffect(() => {
         const interval = setInterval(() => {
             setCurrentPage(prevPage => (prevPage + 1) % 3);
@@ -30,6 +34,9 @@ const Accueil: React.FC = () => {
     }, []);
 
     useEffect(() => {
+        if (emailUser[0]) {
+            console.log(emailUser[0][1])
+        }
         const videoInterval = setInterval(() => {
             setCurrentVideoPage(prevPage => (prevPage + 1) % 3);
         }, 3000); // Change page every 3 seconds
@@ -37,9 +44,18 @@ const Accueil: React.FC = () => {
         return () => clearInterval(videoInterval); // Clean up on unmount
     }, []);
 
-    const {getUsers} = useApiService();
-
-    getUsers().then(data => console.log('api users', data));
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response =  await getMyself();
+            console.log(response)
+          } catch (err) {
+            console.error(err)
+          }
+        };
+    
+      fetchData();
+    }, []);
 
     const handleSubmit = () => {
         // Ajouter la logique de soumission ici

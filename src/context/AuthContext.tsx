@@ -22,6 +22,7 @@ export function useSession() {
       throw new Error('useSession must be wrapped in a <SessionProvider />');
     }
   }
+  console.log(value.session);
 
   return value;
 }

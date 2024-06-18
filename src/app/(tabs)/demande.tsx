@@ -6,9 +6,11 @@ import MapView, { Marker } from 'react-native-maps';
 import axios from 'axios';
 import SelectDropdown from 'react-native-select-dropdown';
 import CalendarPicker from 'react-native-calendar-picker';
+import { useApiService } from '@/hooks/useApiService';
+import { router } from 'expo-router';
 
 const Demande: React.FC = () => {
-  const idUser = '1';
+  const [user, setUser] = useState({id: '0', addresses: []});
   const [listeAdresse, setListeAdresse] = useState([
     {
       id: '1',
@@ -16,23 +18,7 @@ const Demande: React.FC = () => {
     country: '',
     streetAddress:  '23 Rue du Dépot',
     postalCode: '62000',
-    region: ''},
-    {
-      id: '2',
-    city: 'Flines-lez-Râches',
-    country: '',
-    streetAddress:  '35 rue Moïse LAMBERT',
-    postalCode: '59148',
-    region: ''
-    },
-    {
-      id: '3',
-    city: 'Lille',
-    country: '',
-    streetAddress:  '12 rue de Cambrai',
-    postalCode: '59000',
-    region: ''
-    }
+    region: ''}
   ]);
   const [region, setRegion] = useState<{
     latitude: number,
@@ -40,11 +26,13 @@ const Demande: React.FC = () => {
     latitudeDelta: number,
     longitudeDelta: number} | null>(null);
   const [adresseSelectionne, setAdresseSelectionne] = useState(false);
-  const [address, setAddress] = useState({});
+  const [address, setAddress] = useState({id: 0});
   const [chargement, setChargement] = useState(true);
   const [montrerCalendrier, setMontrerCalendrier] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const {getMyself, getAddress} = useApiService();
+
 
   const geocodeAddress = async (adresse: any) => {
     setChargement(true);
@@ -75,15 +63,16 @@ const Demande: React.FC = () => {
   const envoyerDemande = async () => {
     try {
       const response = await axios.post('https://arosaje.nimzero.fr/api/request', {
-        owner: idUser,
-        address: address,
+        owner: 'api/users/'+user.id,
+        address: 'api/addresses/'+address.id,
         startDate: startDate,
         endDate: endDate
       })
+      console.log('Demande envoyée !')
+      router.push('./plantes');
     } catch (err) {
       console.error(err)
     }
-    console.log('Demande envoyée !')
   };
   
   const onDateChange = (date: any, type: string) => {
@@ -98,9 +87,15 @@ const Demande: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://arosaje.nimzero.fr/api/users/'+idUser)
+        const response =  await getMyself();
   
-        setListeAdresse(response.data.addresses);
+        setUser(response)
+        let list = []
+        for (const address of response.addresses) {
+          const idAddress = address.slice(-1);
+          list.push(await getAddress(idAddress))
+        }
+        setListeAdresse(list)
       } catch (err) {
         console.error(err)
       }
